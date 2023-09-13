@@ -43,14 +43,27 @@ include("./components/header.php");
                                                 // echo '<script>alert("'.$user['userID'].'")</script>';
                                                 $userID = $user['userID'];
                                             }
-                                        }
-                                        ?>
-                                        <a href="?wishlist=<?php echo $plants['productID'] ?>&userId=<?php echo $userID ?>"
+                                            ?>
+                                              <a href="?wishlist=<?php echo $plants['productID'] ?>&userId=<?php echo $userID ?>"
                                             data-bs-tooltip="tooltip" data-bs-placement="top"
                                             data-bs-title="Add to wishlist" data-bs-custom-class="p-meta-tooltip"
                                             aria-label="wishlist">
                                             <i class="lastudioicon-heart-2"></i>
                                         </a>
+                                            <?php
+                                        }
+                                        else{
+                                            ?>
+                                              <a href="login.php"
+                                            data-bs-tooltip="tooltip" data-bs-placement="top"
+                                            data-bs-title="Add to wishlist" data-bs-custom-class="p-meta-tooltip"
+                                            aria-label="wishlist">
+                                            <i class="lastudioicon-heart-2"></i>
+                                        </a>
+                                            <?php
+                                        }
+                                        ?>
+                                      
 
                                     </div>
                 <a href="product-single.php?id=<?php echo $plants['productID'] ?>">

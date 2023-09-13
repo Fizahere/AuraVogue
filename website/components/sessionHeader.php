@@ -1,13 +1,13 @@
 <?php
 include("./php/query.php");
-if(!isset($_SESSION['USER'])){
-redirectWindow('login.php');
+if (!isset($_SESSION['USER'])) {
+    redirectWindow('login.php');
 }
 ?>
 
 <?php
 include_once('php/query.php')
-?>
+    ?>
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
@@ -18,7 +18,7 @@ include_once('php/query.php')
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Plantfy - Plants Store Website Template</title>
+    <title>AuraVogue: Where Aesthetics Thrive</title>
 
     <meta name="robots" content="noindex, follow" />
     <meta name="description" content="Plantfy - Plants Store Website Template" />
@@ -32,7 +32,8 @@ include_once('php/query.php')
     <!-- Font CSS -->
     <link rel="preconnect" href="https://fonts.googleapis.com/" />
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200;300;400;500;600;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200;300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
 
     <!-- Vendor CSS (Bootstrap & Icon Font) -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
@@ -47,7 +48,7 @@ include_once('php/query.php')
     <link rel="stylesheet" href="assets/css/style.min.css" />
 </head>
 <style>
-    #navItems{
+    #navItems {
         margin-right: 5rem;
     }
 </style>
@@ -211,7 +212,7 @@ include_once('php/query.php')
                 <!-- Offcanvas Cart Item Start -->
                 <?php
                 $grandTotal = 0;
-                if(isset($_SESSION['cartTwo'])){
+                if (isset($_SESSION['cartTwo'])) {
                     foreach ($_SESSION['cartTwo'] as $item) {
                         $totalAmount = $item['getPrice'] * $item['getQty'];
                         $grandTotal += $totalAmount;
@@ -220,26 +221,28 @@ include_once('php/query.php')
                             <div class="offcanvas-cart-item">
                                 <div class="offcanvas-cart-item__thumbnail">
                                     <!-- <a href="#"> -->
-                                        <img src="./adminPanel/images/products/<?php echo $item['getImage'] ?>" width="70" height="84" alt="product" />
+                                    <img src="./adminPanel/images/products/<?php echo $item['getImage'] ?>" width="70"
+                                        height="84" alt="product" />
                                     <!-- </a> -->
                                 </div>
                                 <div class="offcanvas-cart-item__content">
                                     <h4 class="offcanvas-cart-item__title">
-                                            <?php echo $item['getName'] ?>
+                                        <?php echo $item['getName'] ?>
                                     </h4>
                                     <span class="offcanvas-cart-item__quantity">
                                         <?php echo $item['getQty'] ?> × $
                                         <?php echo $item['getPrice'] ?>
                                     </span>
                                 </div>
-                                <a class="offcanvas-cart-item__remove" href="?removeFromCart=<?php echo $item['getId'] ?>" aria-label="remove">
+                                <a class="offcanvas-cart-item__remove" href="?removeFromCart=<?php echo $item['getId'] ?>"
+                                    aria-label="remove">
                                     <i class="lastudioicon-e-remove"></i>
                                 </a>
                             </div>
                             <?php
                     }
                 }
-                
+
                 ?>
                     <!-- Offcanvas Cart Item End -->
                 </li>
@@ -253,7 +256,9 @@ include_once('php/query.php')
                         <tr class="order-total">
                             <th>Total</th>
                             <td data-title="Total">
-                                <strong><span>$<?php echo $grandTotal ?></span></strong>
+                                <strong><span>$
+                                        <?php echo $grandTotal ?>
+                                    </span></strong>
                             </td>
                         </tr>
                     </tbody>
@@ -263,8 +268,24 @@ include_once('php/query.php')
 
             <!-- Cart Buttons End-->
             <div class="cart-buttons">
-                <a href="cart.php" class="cart-buttons__btn-1 btn">Checkout</a>
-                <a href="cart.php" class="cart-buttons__btn-2 btn">View Cart</a>
+                <?php
+                // if (isset($_SESSION['USER'])) {
+                //     $user = $_SESSION['USER'];
+                //     foreach ($user as $user) {
+                //         // echo '<script>alert("'.$user['userID'].'")</script>';
+                //         $userID = $user['userID'];
+                //     }
+                    ?>
+                    <a href="cart.php" class="cart-buttons__btn-1 btn">Checkout</a>
+                    <a href="cart.php" class="cart-buttons__btn-2 btn">View Cart</a>
+                    <?php
+                // } else {
+                    ?>
+                    <!-- <a href="login.php" class="cart-buttons__btn-1 btn">Checkout</a>
+                    <a href="login.php" class="cart-buttons__btn-2 btn">View Cart</a> -->
+                    <?php
+                // }
+                ?>
             </div>
             <!-- Cart Buttons End-->
         </div>
@@ -309,7 +330,7 @@ include_once('php/query.php')
             <!-- Off Canvas Sidebar Menu Start -->
             <div class="offcanvas-sidebar__menu">
                 <ul class="offcanvas-menu-list">
-                <li><a href="about.php">About Us</a></li>
+                    <li><a href="about.php">About Us</a></li>
                     <li><a href="contact-us.php">Contact Us</a></li>
                     <li><a href="faqs.php">FAQs</a></li>
                     <li><a href="my-account.php">Profile</a></li>
@@ -659,7 +680,3 @@ include_once('php/query.php')
     </div>
 
     <!-- Mobile Meta End -->
-
-  
-    
-        

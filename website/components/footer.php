@@ -22,10 +22,7 @@
                             <ul class="footer-link__list">
                                 <li><a href="about.php">About us</a></li>
                                 <li><a href="allProducts.php">Shop</a></li>
-                                <li><a href="term-of-use.php">Help Center</a></li>
-                                <li>
-                                    <a href="term-of-use.php">Policy & Privacy</a>
-                                </li>
+                                <li><a href="term-of-use.php">Term of use</a></li>
                             </ul>
                         </div>
                         <div class="footer-link__wrapper">

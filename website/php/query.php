@@ -103,12 +103,13 @@ if (isset($_POST['addToCartBtn'])) {
                 location.assign('index.php');
                 </script>";
             }
-        } else {
-
+        } else if{
             $_SESSION['cartTwo'][0] = array('getId' => $_POST['productID'], 'getName' => $_POST['productName'], 'getPrice' => $_POST['productPrice'], 'getDescription' => $_POST['productDescription'], 'getImage' => $_POST['productImage'], 'getQty' => $_POST['getQty']);
             echo "<script>alert('Product added into cart');
         location.assign('index.php');
         </script>";
+        }else{
+            echo "<script><h1>Login to continue</h1></script>"
         }
     }
 ;
