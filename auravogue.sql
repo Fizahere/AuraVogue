@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 05, 2023 at 05:59 PM
+-- Generation Time: Sep 22, 2023 at 09:05 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -81,6 +81,39 @@ CREATE TABLE `feedback` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `final_order`
+--
+
+CREATE TABLE `final_order` (
+  `order_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `fullName` varchar(225) DEFAULT NULL,
+  `phone` int(11) DEFAULT NULL,
+  `city` varchar(225) DEFAULT NULL,
+  `userState` varchar(225) DEFAULT NULL,
+  `zipCode` int(8) DEFAULT NULL,
+  `qty` int(11) NOT NULL,
+  `total_price` int(11) NOT NULL,
+  `date_of_order` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `orderStatus` enum('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+  `billing_address` text NOT NULL,
+  `shipping_address` text NOT NULL,
+  `payment_method` enum('COD','Card') NOT NULL,
+  `card_number` varchar(222) NOT NULL,
+  `expiry_date` date DEFAULT NULL,
+  `cvv` varchar(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `final_order`
+--
+
+INSERT INTO `final_order` (`order_id`, `user_id`, `fullName`, `phone`, `city`, `userState`, `zipCode`, `qty`, `total_price`, `date_of_order`, `orderStatus`, `billing_address`, `shipping_address`, `payment_method`, `card_number`, `expiry_date`, `cvv`) VALUES
+(1, 6, 'Iman', 2147483647, 'PAF base', 'Karachi', 123344, 7, 280, '2023-09-22 18:49:19', 'pending', 'Shahrah-e-Faisal', 'Korangi', 'COD', '', '0000-00-00', '');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `orders`
 --
 
@@ -89,23 +122,22 @@ CREATE TABLE `orders` (
   `userID` int(11) DEFAULT NULL,
   `productID` int(11) DEFAULT NULL,
   `productQuantity` varchar(225) DEFAULT NULL,
-  `orderDate` date DEFAULT current_timestamp(),
   `totalAmount` varchar(225) DEFAULT NULL,
-  `orderStatus` enum('pending','approved','rejected') NOT NULL DEFAULT 'pending'
+  `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`orderID`, `userID`, `productID`, `productQuantity`, `orderDate`, `totalAmount`, `orderStatus`) VALUES
-(1, 5, 2, '2', '2023-08-09', '5677', 'approved'),
-(2, 5, 1, '2', '2023-08-09', '5677', 'pending'),
-(3, 6, 4, '1', '2023-08-12', '25.99', 'pending'),
-(4, 6, 5, '1', '2023-08-12', '26.99', 'pending'),
-(5, 6, 2, '1', '2023-08-12', '39.99', 'pending'),
-(6, 6, NULL, '1', '2023-08-12', '35.99', 'approved'),
-(7, 6, 2, '1', '2023-08-12', '39.99', 'pending');
+INSERT INTO `orders` (`orderID`, `userID`, `productID`, `productQuantity`, `totalAmount`, `date`) VALUES
+(1, 7, 2, '5', '199.95', '2023-09-22 15:37:00'),
+(2, 7, 1, '1', '39.99', '2023-09-22 15:57:04'),
+(3, 7, 2, '1', '39.99', '2023-09-22 15:57:04'),
+(4, 7, 2, '6', '239.94', '2023-09-22 16:01:20'),
+(6, 7, 1, '3', '119.97', '2023-09-22 16:10:03'),
+(7, 6, 18, '5', '145.45', '2023-09-22 18:16:53'),
+(8, 6, 1, '7', '279.93', '2023-09-22 18:49:19');
 
 -- --------------------------------------------------------
 
@@ -153,19 +185,19 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`productID`, `productName`, `productDescription`, `productPrice`, `productImage`, `productStock`, `categoryID`) VALUES
-(1, 'Enchanted Sage Serenity Bandana', 'Ficus lyrata Bambino has an extremely compact, upright, branching nature; slightly smaller and thicker leaves compared to Ficus lyrata', '39.99', 'product-102.jpg', '24', 2),
-(2, 'Blooms & Petals Floral Bandana', 'Epipremnum aureum commonly called golden pothos or devil\'s ivy, is native to the Solomon Islands.', '39.99', 'product-12.jpg', '20', 2),
-(4, 'Gilded Rose Ring', 'Croton is a small shrub used as a landscape plant in tropical climates. In its native habitat, croton is a branching, bushy shrub.', '25.99', 'product-14.jpg', '15', 1),
-(5, 'Eternal Sparkle Ring', 'Colorful pentas, also known as Egyptian starcluster or star flower, are one of the best choices to attract pollinators like butterflies.', '26.99', 'product-15.jpg', '17', 1),
-(6, 'Azure Gemstone Mosaic Ring', 'Lantana is an annual or perennial, small, broadleaf evergreen shrub in the Verbenaceae (verbena) family that has woody stems but a sprawling habit.', '23.99', 'product-16.jpg', '34', 1),
-(7, 'Luminous Lemon Blossom Bandana', 'The coleus is a brightly colored shrub with square stems and leaves ranging from heart-shaped to deeply fringed.', '25.99', 'product-17.jpg', '24', 2),
-(8, 'Serene Sky Floral Bandana', 'Bromeliads typically have bright red, orange, purple, or blue flowers, and can grow in a number of different ways.', '34.99', 'product-18.jpg', '23', 2),
-(9, 'Graceful Blush Dotted Bandana', 'Caladiums are tropical perennials with colorful, heart-shaped leaves native to tropical forests in South and Central America.', '23.99', 'product-19.jpg', '24', 2),
-(11, 'Starry Delight Bracelet', 'It has fragrant, purple to white, flat-clustered, five-lobed flowers in coiled sprays.', '25.99', 'product-21.jpg', '23', 1),
+(1, 'Enchanted Sage Serenity Bandana', 'Enchanted Sage Serenity Bandana has an extremely compact, upright, branching nature; slightly smaller and thicker leaves compared to Ficus lyrata', '39.99', 'product-102.jpg', '24', 2),
+(2, 'Blooms & Petals Floral Bandana', 'Blooms & Petals Floral Bandana commonly called golden pothos or devil\'s ivy, is native to the Solomon Islands.', '39.99', 'product-12.jpg', '20', 2),
+(4, 'Gilded Rose Ring', 'Gilded Rose Ring is a small shrub used as a landscape plant in tropical climates. In its native habitat, croton is a branching, bushy shrub.', '25.99', 'product-14.jpg', '15', 1),
+(5, 'Eternal Sparkle Ring', 'Eternal Sparkle Ring also known as Egyptian starcluster or star flower, are one of the best choices to attract pollinators like butterflies.', '26.99', 'product-15.jpg', '17', 1),
+(6, 'Azure Gemstone Mosaic Ring', 'Azure Gemstone Mosaic Ring is an annual or perennial, small, broadleaf evergreen shrub in the Verbenaceae (verbena) family that has woody stems but a sprawling habit.', '23.99', 'product-16.jpg', '34', 1),
+(7, 'Luminous Lemon Blossom Bandana', 'Luminous Lemon Blossom Bandana is a brightly colored shrub with square stems and leaves ranging from heart-shaped to deeply fringed.', '25.99', 'product-17.jpg', '24', 2),
+(8, 'Serene Sky Floral Bandana', 'Serene Sky Floral Bandana typically have bright red, orange, purple, or blue flowers, and can grow in a number of different ways.', '34.99', 'product-18.jpg', '23', 2),
+(9, 'Graceful Blush Dotted Bandana', 'Graceful Blush Dotted Bandana are tropical perennials with colorful, heart-shaped leaves native to tropical forests in South and Central America.', '23.99', 'product-19.jpg', '24', 2),
+(11, 'Starry Delight Bracelet', 'Starry Delight Bracelet has fragrant, purple to white, flat-clustered, five-lobed flowers in coiled sprays.', '25.99', 'product-21.jpg', '23', 1),
 (12, 'Butterfly Ballet Bangle', 'These are compact, mounded plants which grow 3-9” tall on mostly trailing stems.', '35.99', 'product-22.png', '34', 1),
-(13, 'Starry Orbit Bracelet', 'Also known as the donkey tail plant, this succulent is one of the easiest plants to propagate and care for, which makes it a popular houseplant.', '24.99', 'product-23.jpg', '24', 1),
-(14, 'Enchanted Elegance Bracelet', 'The crown of thorns is a great houseplant because it adjusts well to dry indoor environments and room temperatures.', '26.99', 'product-24.jpg', '23', 1),
-(15, 'Charming Grace Bracelet', 'The flaming katy is a common houseplant that is native to Madagascar. It prefers temperatures from 60 to 85 degrees.', '27.99', 'product-25.jpg', '12', 1),
+(13, 'Starry Orbit Bracelet', 'Also known as Starry Orbit Bracelet this succulent is one of the easiest plants to propagate and care for, which makes it a popular houseplant.', '24.99', 'product-23.jpg', '24', 1),
+(14, 'Enchanted Elegance Bracelet', 'Enchanted Elegance Bracelet of thorns is a great houseplant because it adjusts well to dry indoor environments and room temperatures.', '26.99', 'product-24.jpg', '23', 1),
+(15, 'Charming Grace Bracelet', 'Charming Grace Bracelet is a common houseplant that is native to Madagascar. It prefers temperatures from 60 to 85 degrees.', '27.99', 'product-25.jpg', '12', 1),
 (16, 'Silver heart shaped bracelet', 'The perfect blend of elegance and self-expression.Crafted with precision from a variety of materials. ', '11.99', 'product-26.jpg', '23', 1),
 (17, 'Serene Seafoam Scrunchie', 'Experience the tranquility of the seafoam\'s gentle waves with this scrunchie.', '20.01', 'product-106.jpg', '27', 3),
 (18, 'Peachy Dreams Scrunchie', 'Embrace the warmth and charm of peachy hues with this dreamy scrunchie.', '29.09', 'product-107.jpg', '39', 3),
@@ -202,7 +234,7 @@ INSERT INTO `users` (`userID`, `firstName`, `lastName`, `userEmail`, `userPasswo
 (3, 'zainab', 'zainab', 'zainab@gmail.com', '7444'),
 (4, 'usman', 'usman', 'usman@gmail.com', '9877'),
 (5, 'umar', 'umar', 'umar@gmail.com', '9977'),
-(6, 'iman', 'Iman', 'iman@gmail.com', '$2y$10$kKffEgWCHe5M9H3H4oWlTOZg2Mu9cjJ7e.Lk50ZxF8pkQJsXmP/Fi'),
+(6, 'Iman', 'Malik', 'iman@gmail.com', '$2y$10$kKffEgWCHe5M9H3H4oWlTOZg2Mu9cjJ7e.Lk50ZxF8pkQJsXmP/Fi'),
 (7, 'Fiza', 'Batol', 'fiza@gmail.com', '$2y$10$iAHI4Z9NdGNQg/U73mcdqOcSQxjM/eewmQK7tglYItiORMJzELgAe');
 
 -- --------------------------------------------------------
@@ -223,7 +255,15 @@ CREATE TABLE `wishlist` (
 --
 
 INSERT INTO `wishlist` (`wishlistID`, `customerID`, `wishlistProductID`, `image`) VALUES
-(38, 7, 2, NULL);
+(38, 7, 2, NULL),
+(39, 6, 2, NULL),
+(40, 6, 7, NULL),
+(41, 6, 1, NULL),
+(42, 6, 18, NULL),
+(44, 13, 1, NULL),
+(45, 13, 18, NULL),
+(46, 13, 22, NULL),
+(47, 13, 20, NULL);
 
 --
 -- Indexes for dumped tables
@@ -250,12 +290,19 @@ ALTER TABLE `feedback`
   ADD KEY `feedbackKey` (`feedbackUserID`);
 
 --
+-- Indexes for table `final_order`
+--
+ALTER TABLE `final_order`
+  ADD PRIMARY KEY (`order_id`),
+  ADD KEY `getUserIDFk` (`user_id`);
+
+--
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`orderID`),
   ADD KEY `p_fk` (`productID`),
-  ADD KEY `u_fk` (`userID`);
+  ADD KEY `u_fk` (`userID`) USING BTREE;
 
 --
 -- Indexes for table `productreviews`
@@ -310,16 +357,22 @@ ALTER TABLE `feedback`
   MODIFY `feedbackID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `final_order`
+--
+ALTER TABLE `final_order`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `orderID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `orderID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `productreviews`
 --
 ALTER TABLE `productreviews`
-  MODIFY `reviewID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `reviewID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -337,7 +390,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `wishlistID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `wishlistID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- Constraints for dumped tables
@@ -350,11 +403,17 @@ ALTER TABLE `feedback`
   ADD CONSTRAINT `feedbackKey` FOREIGN KEY (`feedbackUserID`) REFERENCES `users` (`userID`) ON DELETE SET NULL;
 
 --
+-- Constraints for table `final_order`
+--
+ALTER TABLE `final_order`
+  ADD CONSTRAINT `getUserIDFk` FOREIGN KEY (`user_id`) REFERENCES `users` (`userID`) ON DELETE SET NULL;
+
+--
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `p_fk` FOREIGN KEY (`productID`) REFERENCES `products` (`productID`) ON DELETE SET NULL ON UPDATE SET NULL,
-  ADD CONSTRAINT `u_fk` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE SET NULL ON UPDATE SET NULL;
+  ADD CONSTRAINT `p_fk` FOREIGN KEY (`productID`) REFERENCES `products` (`productID`) ON DELETE SET NULL,
+  ADD CONSTRAINT `user_fk` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `productreviews`
