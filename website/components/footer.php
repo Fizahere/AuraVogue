@@ -29,14 +29,19 @@
                             <h4 class="footer-title text-white">Category</h4>
 
                             <ul class="footer-link__list">
-                                <li><a href="index.php">Jewellary</a></li>
-                                <li><a href="index.php">Bandanas</a></li>
-                                <li><a href="index.php">Scrunchies</a></li>
-                                <li><a href="index.php">Outfits</a></li>
-                                <li>
-                                    <a href="index.php">Stickers</a>
-                                </li>
-                            </ul>
+                            <?php
+                            $query = $pdo->prepare("select * from categories");
+                            $query->execute();
+                            $result = $query->fetchAll(PDO::FETCH_ASSOC);
+                            foreach ($result as $singleRow) {
+                                ?>
+                                <li><a href="shop-fullwidth.php?id=<?php echo $singleRow['categoryID'] ?>">
+                                        <?php echo $singleRow['categoryName'] ?>
+                                    </a></li>
+                                <?php
+                            }
+                            ?>
+                        </ul>
                         </div>
                         <div class="footer-link__wrapper">
                             <h4 class="footer-title text-white">Contact</h4>

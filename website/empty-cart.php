@@ -25,7 +25,7 @@ include("./components/header.php");
                     <img src="assets/images/cart-empty.svg" alt="Cart Empty" width="230" height="230" />
                     <p>Your cart is currently empty.</p>
 
-                    <a href="shop-fullwidth.html" class="cart-empty__btn btn">Return to shop</a>
+                    <a href="allProducts.php" class="cart-empty__btn btn">Return to shop</a>
                 </div>
                 <!-- Cart Empty End -->
             </div>

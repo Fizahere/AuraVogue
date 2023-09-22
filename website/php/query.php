@@ -2,6 +2,8 @@
 session_start();
 include_once('models/config.php');
 include_once("models/auth.php");
+
+$con = mysqli_connect("localhost", "root", "", "plantnest");
 ?>
 
 <?php
@@ -25,18 +27,27 @@ if (isset($_POST['signup'])) {
     if (empty($_POST['password'])) {
         redirectWindow('signup.php');
     }
+    if (empty($_POST['confirmpassword'])) {
+        redirectWindow('signup.php');
+    }
     $username = $_POST['username'];
     $fullname = $_POST['fullname'];
     $email = $_POST['email'];
     $password = $_POST['password'];
+    $confirmPassword = $_POST['confirmpassword'];
 
-    //checking if user already exists
-    $user = $authModel->findUserWithEmail($email, $pdo);
-    if ($user) {
-        redirectWindow("signup.php?error=Email already exists");
+    if ($password == $confirmPassword) {
+        //checking if user already exists
+        $user = $authModel->findUserWithEmail($email, $pdo);
+        if ($user) {
+            redirectWindow("signup.php?error=Email already exists");
+        }
+
+        $authModel->signup($username, $fullname, $email, $password, $pdo);
+    } else {
+        //   return;
+        '<script>alert("not matched!")</script>';
     }
-
-    $authModel->signup($username, $fullname, $email, $password, $pdo);
     $user = $authModel->findUserWithEmail($email, $pdo);
 
     if ($user) {
@@ -76,7 +87,8 @@ if (isset($_POST['edit'])) {
     $emailAddress = $_POST['email'];
     $authModel->update($userName, $fullName, $emailAddress, $userID, $pdo);
     redirectWindow('my-account.php');
-};
+}
+;
 
 if (isset($_POST['submit-review'])) {
     $userID = $_POST['userID'];
@@ -85,33 +97,33 @@ if (isset($_POST['submit-review'])) {
     // echo '<script>alert("' . $productID .$userID.$review. '")</script>';
     $authModel->submitReview($review, $productID, $userID, $pdo);
     redirectWindow('index.php');
-};
+}
+;
 
 //add to cart
 if (isset($_POST['addToCartBtn'])) {
-        if (isset($_SESSION['cartTwo'])) {
-            $count = count($_SESSION['cartTwo']);
-            // echo "<script>alert($count)</script>";
+    if (isset($_SESSION['cartTwo'])) {
+        $count = count($_SESSION['cartTwo']);
+        // echo "<script>alert($count)</script>";
 
-            $productId = array_column($_SESSION['cartTwo'], 'getId');
-            if (in_array($_POST['productID'], $productId)) {
-                echo "<script>alert('Product already exists in the cart')</script>";
-            } else {
-                $count = count($_SESSION['cartTwo']);
-                $_SESSION['cartTwo'][$count] = array('getId' => $_POST['productID'], 'getName' => $_POST['productName'], 'getPrice' => $_POST['productPrice'], 'getDescription' => $_POST['productDescription'], 'getImage' => $_POST['productImage'], 'getQty' => $_POST['getQty']);
-                echo "<script>alert('Product added into cart')
+        $productId = array_column($_SESSION['cartTwo'], 'getId');
+        if (in_array($_POST['productID'], $productId)) {
+            echo "<script>alert('Product already exists in the cart')</script>";
+        } else {
+            $count = count($_SESSION['cartTwo']);
+            $_SESSION['cartTwo'][$count] = array('getId' => $_POST['productID'], 'getName' => $_POST['productName'], 'getPrice' => $_POST['productPrice'], 'getDescription' => $_POST['productDescription'], 'getImage' => $_POST['productImage'], 'getQty' => $_POST['getQty']);
+            echo "<script>alert('Product added into cart')
                 location.assign('index.php');
                 </script>";
-            }
-        } else if{
-            $_SESSION['cartTwo'][0] = array('getId' => $_POST['productID'], 'getName' => $_POST['productName'], 'getPrice' => $_POST['productPrice'], 'getDescription' => $_POST['productDescription'], 'getImage' => $_POST['productImage'], 'getQty' => $_POST['getQty']);
-            echo "<script>alert('Product added into cart');
+        }
+    } else {
+
+        $_SESSION['cartTwo'][0] = array('getId' => $_POST['productID'], 'getName' => $_POST['productName'], 'getPrice' => $_POST['productPrice'], 'getDescription' => $_POST['productDescription'], 'getImage' => $_POST['productImage'], 'getQty' => $_POST['getQty']);
+        echo "<script>alert('Product added into cart');
         location.assign('index.php');
         </script>";
-        }else{
-            echo "<script><h1>Login to continue</h1></script>"
-        }
     }
+}
 ;
 //remove from cart
 if (isset($_GET['removeFromCart'])) {
@@ -130,22 +142,10 @@ if (isset($_GET['removeFromCart'])) {
 if (isset($_GET['wishlist'])) {
     $getWishlistId = $_GET['wishlist'];
     $getUserIdForWishlist = $_GET['userId'];
-    //  $query = $pdo->prepare("Select wishlistProductID from wishlist");
-    //  $query->execute();
-    //  $getWishListData = $query->fetchAll(PDO::FETCH_ASSOC);
-    //  echo "<script>alert($getWishListData)</script>";
-    //  if(isset($getWishListData)){
-    //     $productId = array_column($getWishListData['wishlistProductID'],$getWishlistId);
-    //     echo "<script>alert('product already exists')</script>";
-    //  }
-    //  else{
     $authModel->addWishList($pdo, $getWishlistId, $getUserIdForWishlist);
     header('location:wishlist.php');
     // echo "<script>alert('Item added to wishlist')</script>";
-
-
-    //  }
-    echo "<script>alert('working')</script>";
+    // echo "<script>alert('working')</script>";
 }
 ;
 if (isset($_GET['removeFromWishlist'])) {
@@ -156,38 +156,76 @@ if (isset($_GET['removeFromWishlist'])) {
     $query->execute();
     echo "<script>alert('Item removed from wishlist')</script>";
 }
-//checkout
-if (isset($_GET['checkout'])) {
-    $getUserId = $_GET['checkout'];
+if (isset($_POST['submitOrder'])) {
+    $total_qty = 0;
+    $grandTotalPrice = 0;
+    $getUserId = $_POST['sessionUserID'];
+    $fullName = $_POST['fullName'];
+    $phone = $_POST['phone'];
+    $city = $_POST['city'];
+    $userState = $_POST['userState'];
+    $zipCode = $_POST['zipCode'];
+    $billing_address = $_POST['billing_address'];
+    $shipping_address = $_POST['shipping_address'];
+    $payment_method = $_POST['payment_method'];
+    $cvv = $_POST['cvv'];
+    $card = $_POST['card'];
+    $expiry = $_POST['expiry'];
     foreach ($_SESSION['cartTwo'] as $key => $value) {
         $id = $value['getId'];
-        // $name = $value['getName'];
-        $orderPrice = $value['getPrice'];
+        $total_qty += $value['getQty'];
         $qty = $value['getQty'];
         $totalAmount = $value['getQty'] * $value['getPrice'];
-        $query = $pdo->prepare('insert into orders(userID,productID,orderPrice,productQuantity,totalAmount) values(:userID,:productID, :orderPrice, :productQuantity, :totalAmount)');
-        $query->bindParam("userID", $getUserId);
-        $query->bindParam("productID", $id);
-        $query->bindParam("orderPrice", $orderPrice);
-        $query->bindParam("productQuantity", $qty);
-        $query->bindParam("totalAmount", $totalAmount);
+        $grandTotalPrice += $totalAmount;
+        $query = $pdo->prepare('INSERT INTO `orders` (`userID`, `productID`, `productQuantity`, `totalAmount`) VALUES (:userID, :productID, :productQuantity, :totalAmount)');
+        $query->bindParam(":userID", $getUserId);
+        $query->bindParam(":productID", $id);
+        $query->bindParam(":productQuantity", $qty);
+        $query->bindParam(":totalAmount", $totalAmount);
         $query->execute();
-
         echo "<script>alert('order added successfully');
-    location.assign('index.php');
-    </script>";
+            location.assign('index.php');
+            </script>";
         unset($_SESSION['cartTwo']);
     }
-};
+    // mysqli_query($con, "INSERT INTO final_order
+    //     (user_id,fullName,phone,city,userState,zipCode,qty,total_price,payment_method, card_number, billing_address, shipping_address, expiry_date, cvv)
+    //     VALUES
+    //     ('$getUserId','$fullName','$phone','$city','$userState','$zipCode','$total_qty','$grandTotalPrice', '$payment_method', '$card', '$billing_address', '$shipping_address', '$expiry', '$cvv')");
+    $queryToInsertIntoFinalOrder = $pdo->prepare("INSERT INTO `final_order` (`user_id`, `fullName`, `phone`, `city`, `userState`, `zipCode`, `qty`, `total_price`, `payment_method`, `card_number`, `billing_address`, `shipping_address`, `expiry_date`, `cvv`) VALUES (:user_id, :fullName, :phone, :city, :userState, :zipCode, :qty, :total_price, :payment_method, :card_number, :billing_address, :shipping_address, :expiry_date, :cvv)");
+    $queryToInsertIntoFinalOrder->bindParam(":user_id", $getUserId);
+    $queryToInsertIntoFinalOrder->bindParam(":fullName", $fullName);
+    $queryToInsertIntoFinalOrder->bindParam(":phone", $phone);
+    $queryToInsertIntoFinalOrder->bindParam(":city", $city);
+    $queryToInsertIntoFinalOrder->bindParam(":userState", $userState);
+    $queryToInsertIntoFinalOrder->bindParam(":zipCode", $zipCode);
+    $queryToInsertIntoFinalOrder->bindParam(":qty", $total_qty);
+    $queryToInsertIntoFinalOrder->bindParam(":total_price", $grandTotalPrice);
+    $queryToInsertIntoFinalOrder->bindParam(":payment_method", $payment_method);
+    $queryToInsertIntoFinalOrder->bindParam(":card_number", $card);
+    $queryToInsertIntoFinalOrder->bindParam(":billing_address", $billing_address);
+    $queryToInsertIntoFinalOrder->bindParam(":shipping_address", $shipping_address);
+    $queryToInsertIntoFinalOrder->bindParam(":expiry_date", $expiry);
+    $queryToInsertIntoFinalOrder->bindParam(":cvv", $cvv);
+    $queryToInsertIntoFinalOrder->execute();
 
+}
+;
 if (isset($_POST['delete-review'])) {
     $reviewID = $_POST['reviewID'];
     $authModel->deleteReview($reviewID, $pdo);
-};
+}
+;
 
 if (isset($_POST['delete-account'])) {
     $deleteAccountID = $_POST['deleteID'];
-    $authModel->deleteAccount($deleteAccountID,$pdo);
-echo '<script>alert("Your has been deleted.")</script>';
+    $authModel->deleteAccount($deleteAccountID, $pdo);
+    echo '<script>alert("Your account has been deleted.")</script>';
     redirectWindow('logout.php');
-    }
+}
+if (isset($_GET['id'])) {
+    $getCategoryID = $_GET['id'];
+    $query = $pdo->prepare("Select * from products where categoryID = :categoryID");
+    $query->bindParam("categoryID", $getCategoryID);
+    $query->execute();
+}

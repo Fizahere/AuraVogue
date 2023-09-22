@@ -1,7 +1,9 @@
 <?php
 //  session_start();
 include("./components/sessionHeader.php");
-
+if (!isset($_SESSION['cartTwo'])) {
+    redirectWindow('empty-cart.php');
+}
 ?>
 
 <main>
@@ -66,7 +68,7 @@ include("./components/sessionHeader.php");
                                         </td>
 
                                         <td class="cart-product-thumbnail">
-                                            <a href="product-single.php">
+                                            <a href="product-single.html">
                                                 <img src="./adminPanel/images/products/<?php echo $item['getImage'] ?>"
                                                     alt="Product" width="70" height="89" />
                                             </a>
@@ -152,14 +154,9 @@ include("./components/sessionHeader.php");
                                     $userID = $user['userID'];
                                 }
                                 ?>
-                                <a href="?checkout=<?php echo $userID ?>">Proceed to checkout</a>
+                                <a href="checkout.php?userID<?php echo $userID ?>">Proceed to checkout</a>
                                 <?php
-                            }
-                            else {
-                                ?>
-                                <a href="login.php">Proceed to checkout</a>
-                                <?php
-
+                                // }
                             }
                             ?>
 

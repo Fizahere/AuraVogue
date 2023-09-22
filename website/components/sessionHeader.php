@@ -18,7 +18,7 @@ include_once('php/query.php')
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>AuraVogue: Where Aesthetics Thrive</title>
+    <title>AuraVogue - An Online Plants Nursery</title>
 
     <meta name="robots" content="noindex, follow" />
     <meta name="description" content="Plantfy - Plants Store Website Template" />
@@ -51,6 +51,10 @@ include_once('php/query.php')
     #navItems {
         margin-right: 5rem;
     }
+
+    #logoutButton {
+        cursor: pointer;
+    }
 </style>
 
 <body>
@@ -63,21 +67,21 @@ include_once('php/query.php')
                     <div class="header__top--left d-none d-md-block">
                         <ul class="header__top--items">
                             <li>
-                                <a href="mailto:info.plantnest@mail.com" aria-label="mail">
+                                <a href="mailto:info.auravogue@gmail.com" aria-label="mail">
                                     <i class="lastudioicon-mail-2"></i>
-                                    <span>auravogue@mail.com</span>
+                                    <span>auravogue@gmail.com</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="tel:+(867)195-6696" aria-label="Phone">
                                     <i class="lastudioicon-phone-call"></i>
-                                    <span>(867)195-6696</span>
+                                    <span>(0334)195-6696</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" aria-label="Map">
+                                <a href="index.php" aria-label="Map">
                                     <i class="lastudioicon-pin-3-1"></i>
-                                    <span>Pakistan</span>
+                                    <span>WorldWide</span>
                                 </a>
                             </li>
                         </ul>
@@ -85,26 +89,20 @@ include_once('php/query.php')
                     <div class="header__top--right">
                         <ul class="header__top--items">
                             <li>
-                                <a href="login.php" aria-label="login">
-                                    <i class="lastudioicon-single-01-1"></i>
-                                    <?php
-                                    if (isset($_SESSION['USER'])) {
-                                        ?>
-                                        <span><a href="my-account.php">Logout</a></span>
-                                        <?php
-                                    } else {
-                                        ?>
-                                        <span>Login</span>
-                                        <?php
-                                    }
+
+                                <i class="lastudioicon-single-01-1"></i>
+                                <?php
+                                if (isset($_SESSION['USER'])) {
                                     ?>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="term-of-use.php" aria-label="help">
-                                    <i class="lastudioicon-b-meeting-2"></i>
-                                    <span>Help Center</span>
-                                </a>
+                                    <span id="logoutButton">Logout</span>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <span> <a href="login.php" aria-label="login">Login </a></span>
+                                    <?php
+                                }
+                                ?>
+
                             </li>
                         </ul>
                     </div>
@@ -125,8 +123,9 @@ include_once('php/query.php')
                     </div>
                     <div class="col-xl-3 col-md-4 col-6">
                         <div class="header__main--logo text-center text-xl-start">
-                            <a href="index.html">
-                                <img src="assets/images/logo.png" alt="Logo" />
+                            <a href="index.php">
+                                <!-- <img src="assets/images/logo.png" alt="Logo" /> -->
+                                <h1>AuraVogue</h1>
                             </a>
                         </div>
                     </div>
@@ -136,7 +135,7 @@ include_once('php/query.php')
                                 <!-- Menu Item List Start -->
                                 <ul class="menu-items-list menu-items-list--dark d-flex justify-content-center">
                                     <li>
-                                        <a class="active" href="index.php">
+                                        <a href="index.php">
                                             Home
                                         </a>
                                     </li>
@@ -177,7 +176,23 @@ include_once('php/query.php')
                                 <li class="cart">
                                     <button data-bs-toggle="offcanvas" data-bs-target="#cartSidebar" aria-label="Cart">
                                         <i class="lastudioicon-shopping-cart-1"></i>
-                                        <!-- <span class="badge">03</span> -->
+                                        <?php
+                                        if (isset($_SESSION['cartTwo'])) {
+                                            $count = count($_SESSION['cartTwo']);
+                                            // echo "<script>alert('" . $count . "')</script>";
+                                            ?>
+
+                                            <span class="badge">
+                                                <?php echo $count ?>
+                                            </span>
+                                            <?php
+                                        } else {
+                                            ?>
+                                            <span class="badge">0
+                                            </span>
+                                            <?php
+                                        }
+                                        ?>
                                     </button>
                                 </li>
                             </ul>
@@ -220,14 +235,16 @@ include_once('php/query.php')
                         <li>
                             <div class="offcanvas-cart-item">
                                 <div class="offcanvas-cart-item__thumbnail">
-                                    <!-- <a href="#"> -->
-                                    <img src="./adminPanel/images/products/<?php echo $item['getImage'] ?>" width="70"
-                                        height="84" alt="product" />
-                                    <!-- </a> -->
+                                    <a href="#">
+                                        <img src="./adminPanel/images/products/<?php echo $item['getImage'] ?>" width="70"
+                                            height="84" alt="product" />
+                                    </a>
                                 </div>
                                 <div class="offcanvas-cart-item__content">
                                     <h4 class="offcanvas-cart-item__title">
-                                        <?php echo $item['getName'] ?>
+                                        <a href="#">
+                                            <?php echo $item['getName'] ?>
+                                        </a>
                                     </h4>
                                     <span class="offcanvas-cart-item__quantity">
                                         <?php echo $item['getQty'] ?> × $
@@ -268,24 +285,8 @@ include_once('php/query.php')
 
             <!-- Cart Buttons End-->
             <div class="cart-buttons">
-                <?php
-                // if (isset($_SESSION['USER'])) {
-                //     $user = $_SESSION['USER'];
-                //     foreach ($user as $user) {
-                //         // echo '<script>alert("'.$user['userID'].'")</script>';
-                //         $userID = $user['userID'];
-                //     }
-                    ?>
-                    <a href="cart.php" class="cart-buttons__btn-1 btn">Checkout</a>
-                    <a href="cart.php" class="cart-buttons__btn-2 btn">View Cart</a>
-                    <?php
-                // } else {
-                    ?>
-                    <!-- <a href="login.php" class="cart-buttons__btn-1 btn">Checkout</a>
-                    <a href="login.php" class="cart-buttons__btn-2 btn">View Cart</a> -->
-                    <?php
-                // }
-                ?>
+                <!-- <a href="cart.php" class="cart-buttons__btn-1 btn">Checkout</a> -->
+                <a href="cart.php" class="cart-buttons__btn-2 btn">View Cart</a>
             </div>
             <!-- Cart Buttons End-->
         </div>
@@ -353,7 +354,7 @@ include_once('php/query.php')
             <div class="offcanvas-sidebar__info">
                 <ul class="offcanvas-info-list">
                     <li><a href="tel:+61225315600">(+612) 2531 5600</a></li>
-                    <li><a href="mailto:info.plantnest@exmple.com">plantnest@mail.com</a></li>
+                    <li><a href="mailto:info.AuraVogue@exmple.com">AuraVogue@mail.com</a></li>
                     <li>
                         <span>
                             PO Box 1622 Colins Street West Victoria 8077 Australia
@@ -415,232 +416,34 @@ include_once('php/query.php')
             <nav class="navbar-mobile-menu">
                 <ul class="mobile-menu-items">
                     <li>
-                        <a href="#">
+                        <a href="index.php">
                             Home
-                            <span class="menu-expand" aria-label="down-arrow">
-                                <i class="lastudioicon-down-arrow"></i>
-                            </span>
                         </a>
-                        <ul class="sub-menu">
-                            <li><a href="index.html">Plant 01</a></li>
-                            <li><a href="index-2.html">Plant 02</a></li>
-                        </ul>
                     </li>
                     <li>
-                        <a href="#">
-                            Pages
-                            <span class="menu-expand" aria-label="down-arrow">
-                                <i class="lastudioicon-down-arrow"></i>
-                            </span>
+                        <a href="about.php">
+                            About
                         </a>
-                        <ul class="sub-menu">
-                            <li><a href="about.html">About us</a></li>
-                            <li><a href="coming-soon.html">Coming Soon</a></li>
-                            <li><a href="our-team.html">Our Team</a></li>
-                            <li><a href="contact-us.html">Contact Us</a></li>
-                            <li><a href="faqs.html">FAQ's</a></li>
-                            <li><a href="term-of-use.html">term of use</a></li>
-                            <li><a href="404.html">404 Page</a></li>
-                            <li>
-                                <a href="login-register.html">Login & Register</a>
-                            </li>
-                        </ul>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="contact-us.php">
+                            Contact-us
+                        </a>
+                    </li>
+                    <li>
+                        <a href="faqs.php">
+                            FAQ's
+                        </a>
+                    </li>
+                    <li>
+                        <a href="all-products.php">
                             Shop
-                            <span class="menu-expand" aria-label="down-arrow">
-                                <i class="lastudioicon-down-arrow"></i>
-                            </span>
                         </a>
-                        <div class="mega-menu">
-                            <div class="mega-menu-col">
-                                <h5 class="mega-menu-title">Shop Layout</h5>
-                                <ul class="">
-                                    <li>
-                                        <a href="shop-fullwidth.html">Shop Fullwidth</a>
-                                    </li>
-                                    <li>
-                                        <a href="shop-sidebar.html">Shop Sidebar</a>
-                                    </li>
-                                    <li>
-                                        <a href="shop-masonry.html">Shop Masonry</a>
-                                    </li>
-                                    <li>
-                                        <a href="shop-3-columns.html">Shop 03 Columns</a>
-                                    </li>
-                                    <li>
-                                        <a href="shop-4-columns.html">Shop 04 Columns</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="mega-menu-col">
-                                <ul class="">
-                                    <li><a href="#">Featured Banner</a></li>
-                                    <li class="mega-menu-title">Hover Style</li>
-                                    <li><a href="#">Hover Style 01</a></li>
-                                </ul>
-                            </div>
-                            <div class="mega-menu-col">
-                                <h5 class="mega-menu-title">Shop Pages</h5>
-                                <ul class="">
-                                    <li>
-                                        <a href="my-account.html">My Account</a>
-                                    </li>
-                                    <li><a href="cart.html">Cart</a></li>
-                                    <li>
-                                        <a href="order-tracking.html">Order Tracking</a>
-                                    </li>
-                                    <li><a href="wishlist.html">Wishlist</a></li>
-                                    <li><a href="compare.html">Compare</a></li>
-                                    <li>
-                                        <a href="empty-cart.html">Cart Empty</a>
-                                    </li>
-                                    <li><a href="checkout.html">Checkout</a></li>
-                                    <li><a href="thank-you.html">Thank You</a></li>
-                                </ul>
-                            </div>
-                            <div class="mega-menu-col">
-                                <h5 class="mega-menu-title">Product Pages</h5>
-                                <ul class="">
-                                    <li>
-                                        <a href="product-single.html">
-                                            Product Simple
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="product-single-variable.php">
-                                            Product Variable
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="product-single-carousel.php">
-                                            Product Carousel
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="product-single-affiliate.php">
-                                            Product Affiliate
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="product-single-countdown.php">
-                                            Product CountDown
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
                     </li>
                     <li>
-                        <a href="#">
-                            Collections
-                            <span class="menu-expand" aria-label="down-arrow">
-                                <i class="lastudioicon-down-arrow"></i>
-                            </span>
+                        <a href="my-account.php">
+                            Profile
                         </a>
-                        <div class="mega-menu">
-                            <div class="mega-menu__banner">
-                                <a href="#">
-                                    <div class="mega-menu__banner--image">
-                                        <img src="assets/images/megamenu-fashion-01.jpg" alt="Fashion Banner"
-                                            width="269" height="271" />
-                                    </div>
-                                    <div class="mega-menu__banner--caption">
-                                        <h4 class="caption-title">New Arrival</h4>
-                                        <p class="caption-desc">
-                                            Non curabitur gravida
-                                        </p>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="mega-menu__content">
-                                <h4 class="mega-menu__content--title">
-                                    Summer Collection 2023
-                                </h4>
-                                <div class="d-flex flex-wrap">
-                                    <ul class="mega-menu__content--list">
-                                        <li>
-                                            <a href="#">Dresses and jumpsuits</a>
-                                        </li>
-                                        <li><a href="#">Shirts</a></li>
-                                        <li><a href="#">T-shirts and tops</a></li>
-                                        <li>
-                                            <a href="#">Jackets and Suit Jackets</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Cardigans and sweaters</a>
-                                        </li>
-                                        <li><a href="#">Sweatshirts</a></li>
-                                        <li><a href="#">Coats</a></li>
-                                    </ul>
-                                    <ul class="mega-menu__content--list">
-                                        <li><a href="#">Trousers</a></li>
-                                        <li><a href="#">Jeans</a></li>
-                                        <li><a href="#">Skirts</a></li>
-                                        <li><a href="#">Shorts</a></li>
-                                        <li>
-                                            <a href="#">Bikinis and swimsuits</a>
-                                        </li>
-                                        <li><a href="#">Sportswear</a></li>
-                                        <li>
-                                            <a href="#">Underwear and lingerie</a>
-                                        </li>
-                                        <li><a href="#">Pyjamas</a></li>
-                                    </ul>
-                                </div>
-                                <div class="mt-auto">
-                                    <ul class="mega-menu__info">
-                                        <li><a href="#">info@exmple.com</a></li>
-                                        <li><a href="#">(626)997-4298</a></li>
-                                    </ul>
-                                    <div class="mega-menu__social">
-                                        <div class="mega-menu__social--lable">
-                                            Connect with us
-                                        </div>
-                                        <ul class="mega-menu__social--social">
-                                            <li>
-                                                <a href="#" aria-label="facebook">
-                                                    <i class="lastudioicon-b-facebook"></i>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#" aria-label="twitter">
-                                                    <i class="lastudioicon-b-twitter"></i>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#" aria-label="instagram">
-                                                    <i class="lastudioicon-b-instagram"></i>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <a href="#">
-                            Blog
-                            <span class="menu-expand" aria-label="down-arrow">
-                                <i class="lastudioicon-down-arrow"></i>
-                            </span>
-                        </a>
-                        <ul class="sub-menu">
-                            <li>
-                                <a href="blog-right-sidebar.html">
-                                    Blog Right Sidebar
-                                </a>
-                            </li>
-                            <li>
-                                <a href="blog-left-sidebar.html">
-                                    Blog Left Sidebar
-                                </a>
-                            </li>
-                            <li><a href="blog.html">Blog No Sidebar</a></li>
-                            <li><a href="blog-single.html">Single Post</a></li>
-                        </ul>
                     </li>
                 </ul>
             </nav>
@@ -678,5 +481,23 @@ include_once('php/query.php')
             </li>
         </ul>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get a reference to the logout button
+            const logoutButton = document.getElementById('logoutButton');
 
+            // Attach a click event listener to the logout button
+            logoutButton.addEventListener('click', function () {
+                // Display a confirmation dialog
+                const confirmed = window.confirm('Are you sure you want to log out?');
+
+                // If the user confirms, log them out
+                if (confirmed) {
+                    // Perform the logout action here, for example, redirect to 'logout.php'
+                    window.location.href = 'logout.php';
+                }
+            });
+        });
+
+    </script>
     <!-- Mobile Meta End -->
